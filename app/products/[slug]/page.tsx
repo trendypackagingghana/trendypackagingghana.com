@@ -183,7 +183,7 @@ export default function ProductDetailPage({ params }: ProductDetailProps) {
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
                 <Link
-                  href="#contact"
+                  href="/contact"
                   className="flex-1 flex min-w-[180px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-xl h-14 px-6 bg-primary text-white text-lg font-bold leading-normal tracking-[0.015em] hover:shadow-lg hover:shadow-primary/20 transition-all"
                 >
                   <span className="material-symbols-outlined">request_quote</span>

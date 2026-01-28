@@ -7,7 +7,7 @@ const FeatureCards = () => {
       
       {/* Custom Molds Card */}
       <Link
-        href="#contact"
+        href="/contact"
         className="flex flex-col md:flex-row items-center gap-6 p-8 rounded-2xl bg-white border border-border hover:shadow-xl hover:shadow-primary/5 transition-all cursor-pointer group"
       >
         <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">

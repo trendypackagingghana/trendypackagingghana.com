@@ -7,7 +7,7 @@ const navItems = [
   { name: "Home", href: "/", icon: "home" },
   { name: "Products", href: "/products", icon: "grid" },
   { name: "Services", href: "/services", icon: "settings" },
-  { name: "Contact", href: "/#contact", icon: "chat" },
+  { name: "Contact", href: "/contact", icon: "chat" },
 ];
 
 const icons: Record<string, React.ReactNode> = {

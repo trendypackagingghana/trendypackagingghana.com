@@ -14,7 +14,7 @@ const FooterNew = () => {
     { name: "Manufacturing Process", href: "#" },
     { name: "Quality Control", href: "#" },
     { name: "Sustainability", href: "#" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (

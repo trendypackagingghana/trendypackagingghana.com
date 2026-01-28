@@ -11,7 +11,7 @@ const ServicesCTA = () => {
       </p>
       <div className="flex flex-wrap justify-center gap-4">
         <Link
-          href="#contact"
+          href="/contact"
           className="bg-primary hover:opacity-90 text-white px-10 py-4 rounded-xl font-bold transition-all flex items-center gap-2 shadow-md"
         >
           Request a Consultation
