@@ -1,0 +1,105 @@
+// Prisma Schema for Supabase PostgreSQL
+// Migrations: npx prisma migrate dev --name <migration_name>
+// Generate client: npx prisma generate
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Used for migrations (bypasses connection pooler)
+}
+
+// =============================================================================
+// USER PROFILE
+// =============================================================================
+// This table extends Supabase Auth users with application-specific data.
+// The `id` references `auth.users.id` from Supabase Auth.
+// We don't manage auth here - Supabase Auth handles that.
+
+model Profile {
+  id        String   @id @db.Uuid // References auth.users.id
+  email     String   @unique
+  fullName  String?  @map("full_name")
+  avatarUrl String?  @map("avatar_url")
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  orders Order[]
+
+  @@map("profiles")
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+// =============================================================================
+// EXAMPLE DOMAIN MODELS
+// =============================================================================
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  imageUrl    String?  @map("image_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  orderItems OrderItem[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@map("products")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String      @map("user_id") @db.Uuid
+  status    OrderStatus @default(PENDING)
+  total     Decimal     @db.Decimal(10, 2)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  user  Profile     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String  @map("order_id")
+  productId String  @map("product_id")
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, productId])
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
