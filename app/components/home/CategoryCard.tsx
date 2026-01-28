@@ -3,21 +3,19 @@ import Link from "next/link";
 interface CategoryCardProps {
   title: string;
   description: string;
-  imageUrl?: string;
   href: string;
 }
 
-const CategoryCard = ({ title, description, imageUrl, href }: CategoryCardProps) => {
+const CategoryCard = ({ title, description, href }: CategoryCardProps) => {
   return (
     <article className="flex-none w-80 group cursor-pointer bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48 w-full overflow-hidden mb-3">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 bg-gradient-to-br from-primary/10 to-primary/5"
-          style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
           role="img"
           aria-label={title}
         />
-        {/* Overlay gradient for text readability if image exists, otherwise subtle */}
+        {/* Overlay gradient for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute bottom-4 left-4 text-white">
           <h3 className="font-bold text-lg">{title}</h3>

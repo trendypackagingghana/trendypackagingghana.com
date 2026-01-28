@@ -15,7 +15,7 @@ const NewsletterCTA = () => {
           <input
             id="business-email"
             type="email"
-            className="flex-1 min-w-[300px] border border-border bg-input focus:ring-2 focus:ring-primary focus:border-primary rounded-lg h-12 px-4 text-foreground placeholder:text-muted-foreground"
+            className="w-full sm:flex-1 sm:min-w-[300px] rounded-lg bg-input border border-border h-12 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
             placeholder="Enter your business email"
           />
           <button
