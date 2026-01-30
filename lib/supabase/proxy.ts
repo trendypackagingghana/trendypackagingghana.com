@@ -1,7 +1,7 @@
 /**
- * Supabase Middleware Client
+ * Supabase Proxy Client
  *
- * Creates a Supabase client for use in Next.js middleware.
+ * Creates a Supabase client for use in Next.js proxy.
  * Handles session refresh and cookie management.
  */
 

@@ -1,14 +1,14 @@
 /**
- * Next.js Middleware
+ * Next.js Proxy
  *
  * Handles session refresh and route protection.
  * Runs on every request before the route handler.
  */
 
-import { updateSession } from "@/lib/supabase/middleware";
+import { updateSession } from "@/lib/supabase/proxy";
 import { type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return await updateSession(request);
 }
 

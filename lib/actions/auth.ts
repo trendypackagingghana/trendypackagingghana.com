@@ -8,7 +8,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createProfile, getProfileById } from "@/lib/db/queries/profiles";
 import { signInSchema } from "@/lib/validations/auth";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -28,7 +27,6 @@ export async function signIn(formData: FormData): Promise<ActionResult> {
     password: formData.get("password") as string,
   };
 
-  // Validate input
   const parsed = signInSchema.safeParse(rawData);
   if (!parsed.success) {
     return {
@@ -51,20 +49,6 @@ export async function signIn(formData: FormData): Promise<ActionResult> {
 
   if (!data.user) {
     return { success: false, error: "Authentication failed" };
-  }
-
-  // Ensure profile exists
-  const profile = await getProfileById(data.user.id);
-  if (!profile) {
-    try {
-      await createProfile({
-        id: data.user.id,
-        email: data.user.email!,
-        fullName: data.user.user_metadata?.full_name,
-      });
-    } catch (profileError) {
-      console.error("Failed to create missing profile:", profileError);
-    }
   }
 
   revalidatePath("/", "layout");
