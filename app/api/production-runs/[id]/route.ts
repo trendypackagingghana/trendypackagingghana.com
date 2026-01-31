@@ -28,7 +28,7 @@ export async function PATCH(
     // Fetch the existing run
     const { data: run, error: fetchError } = await supabase
       .from("production_runs")
-      .select("*")
+      .select("id, status, pieces_per_hour")
       .eq("id", id)
       .single();
 

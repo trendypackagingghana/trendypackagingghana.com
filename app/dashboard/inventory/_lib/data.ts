@@ -107,7 +107,7 @@ export async function getStockMovements(limit = 20): Promise<StockMovement[]> {
 
     const { data, error } = await supabase
         .from("stock_movements")
-        .select("*")
+        .select("id, item_type, item_sku, direction, reason, quantity_pieces, quantity_kg, reference_id, created_at, created_by")
         .order("created_at", { ascending: false })
         .limit(limit);
 

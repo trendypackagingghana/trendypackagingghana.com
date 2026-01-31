@@ -1,15 +1,12 @@
-/** Canonical shape of a production_runs row from Supabase. */
+/** Shape returned by the production_runs list query. */
 export interface ProductionRun {
   id: string;
-  machine_id: number;
   finished_good_sku: string;
   target_quantity: number;
   planned_start_time: string;
   shift: string;
   status: string;
   pieces_per_hour: number;
-  weight_grams: number;
-  masterbatch_pct: number;
   expected_hours: number;
   expected_raw_kg: number;
   expected_masterbatch_kg: number;
@@ -22,8 +19,6 @@ export interface ProductionRun {
   actual_material_cost: number | null;
   actual_shift: string | null;
   completed_at: string | null;
-  created_by: string;
-  created_at: string;
   finished_goods: {
     pieces_per_bag: number | null;
     production_materials: { weight_per_bag_kg: number } | null;

@@ -14,7 +14,7 @@ export default async function ProductionRunsList({
 
   let query = supabase
     .from("production_runs")
-    .select("*, finished_goods(pieces_per_bag, production_materials(weight_per_bag_kg))")
+    .select("id, finished_good_sku, target_quantity, planned_start_time, shift, status, pieces_per_hour, expected_hours, expected_raw_kg, expected_masterbatch_kg, expected_labour_cost, expected_material_cost, actual_pieces, actual_raw_kg, actual_masterbatch_kg, actual_labour_cost, actual_material_cost, actual_shift, completed_at, finished_goods(pieces_per_bag, production_materials(weight_per_bag_kg))")
     .order("planned_start_time", { ascending: false });
 
   if (status && VALID_STATUSES.includes(status)) {
@@ -61,7 +61,7 @@ export default async function ProductionRunsList({
 
   return (
     <div className="flex gap-4 md:gap-6 overflow-x-auto pb-2 scrollbar-thin">
-      {runs.map((run: ProductionRun) => (
+      {(runs as unknown as ProductionRun[]).map((run) => (
         <div key={run.id} className="min-w-[280px] max-w-[320px] flex-shrink-0">
           <ProductionRunCard run={run} />
         </div>
