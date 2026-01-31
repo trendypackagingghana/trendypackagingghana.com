@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch finished good to snapshot its values
     const { data: good, error: goodError } = await supabase
-      .from("finished-goods")
+      .from("finished_goods")
       .select("pieces_per_hour, weight, masterbatch_percentage")
       .eq("sku", validated.finished_good_sku)
       .single();

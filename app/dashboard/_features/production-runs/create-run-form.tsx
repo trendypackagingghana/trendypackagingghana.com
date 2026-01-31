@@ -67,7 +67,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     Promise.all([
       fetch("/api/machinery").then((r) => r.json()),
-      fetch("/api/finished-goods").then((r) => r.json()),
+      fetch("/api/finished_goods").then((r) => r.json()),
     ])
       .then(([m, g]) => {
         setMachines(Array.isArray(m) ? m : []);
