@@ -1,39 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import {
   calculateExpectedValues,
   type ProductionRunExpected,
 } from "@/lib/calculations/production-run";
+import { createProductionRun } from "@/lib/actions/production-runs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-
-interface Machine {
-  id: number;
-  name: string;
-  machine_type: string;
-}
-
-interface FinishedGood {
-  sku: string;
-  category: string;
-  company: string;
-  size: string | null;
-  color: string;
-  pieces_per_hour: number;
-  pieces_per_bag: number | null;
-  weight: string;
-  masterbatch_percentage: string;
-  machine_type: string;
-}
+import type { Machine, FinishedGood } from "@/types/production";
 
 type Step = "form" | "preview";
 
 export default function CreateRunForm({ onClose }: { onClose: () => void }) {
-  const router = useRouter();
   const [step, setStep] = useState<Step>("form");
 
   const [machines, setMachines] = useState<Machine[]>([]);
@@ -107,26 +88,19 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
 
     try {
       const isoStart = new Date(startTime).toISOString();
-      const res = await fetch("/api/production-runs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          machine_id: Number(machineId),
-          finished_good_sku: sku,
-          target_quantity: targetQty,
-          planned_start_time: isoStart,
-          shift,
-        }),
+      const result = await createProductionRun({
+        machine_id: Number(machineId),
+        finished_good_sku: sku,
+        target_quantity: targetQty,
+        planned_start_time: isoStart,
+        shift,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Failed to create production run");
+      if (result.error) {
+        setError(result.error);
         return;
       }
 
-      router.refresh();
       onClose();
     } catch {
       setError("An unexpected error occurred");

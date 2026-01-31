@@ -1,25 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-
-const LOW_STOCK_THRESHOLD = 11;
+import { getLowStockAlerts } from "../production-runs/_lib/data";
 
 export default async function AlertBar() {
-  const supabase = await createClient();
-
-  const alerts: string[] = [];
-
-  // Check raw material stock
-  const { data: rawMaterials } = await supabase
-    .from("raw_material_stock")
-    .select("material_sku, quantity_bags")
-    .lt("quantity_bags", LOW_STOCK_THRESHOLD);
-
-  if (rawMaterials && rawMaterials.length > 0) {
-    for (const item of rawMaterials) {
-      alerts.push(
-        `Raw material "${item.material_sku}" is low — ${item.quantity_bags} bags remaining`
-      );
-    }
-  }
+  const alerts = await getLowStockAlerts();
 
   if (alerts.length === 0) return null;
 

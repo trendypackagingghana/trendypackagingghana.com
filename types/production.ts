@@ -38,3 +38,24 @@ export interface ProductionRunSummary {
   expected_labour_cost: number;
   expected_material_cost: number;
 }
+
+/** Machine from the machinery table. */
+export interface Machine {
+  id: number;
+  name: string;
+  machine_type: string;
+}
+
+/** Finished good from the finished_goods table. */
+export interface FinishedGood {
+  sku: string;
+  category: string;
+  company: string;
+  size: string | null;
+  color: string;
+  pieces_per_hour: number;
+  pieces_per_bag: number | null;
+  weight: string;
+  masterbatch_percentage: string;
+  machine_type: string;
+}

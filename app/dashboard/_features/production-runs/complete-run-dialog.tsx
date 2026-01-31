@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -21,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PRODUCTION_CONSTANTS } from "@/lib/constants/production";
-import type { ProductionRunSummary } from "../../_lib/types";
+import { completeProductionRun } from "@/lib/actions/production-runs";
+import type { ProductionRunSummary } from "@/types/production";
 
 type Step = "form" | "comparison";
 
@@ -75,7 +75,6 @@ export default function CompleteRunDialog({
   open,
   onOpenChange,
 }: CompleteRunDialogProps) {
-  const router = useRouter();
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -132,24 +131,18 @@ export default function CompleteRunDialog({
     setError(null);
 
     try {
-      const res = await fetch(`/api/production-runs/${run.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          completed_at: new Date(form.completed_at).toISOString(),
-          actual_shift: form.actual_shift,
-          actual_pieces: pieces,
-          actual_raw_kg: rawKg,
-          actual_masterbatch_kg: mbKg,
-        }),
+      const result = await completeProductionRun(run.id, {
+        completed_at: new Date(form.completed_at).toISOString(),
+        actual_shift: form.actual_shift,
+        actual_pieces: pieces,
+        actual_raw_kg: rawKg,
+        actual_masterbatch_kg: mbKg,
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to complete run");
+      if (result.error) {
+        throw new Error(result.error);
       }
 
-      router.refresh();
       handleOpenChange(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

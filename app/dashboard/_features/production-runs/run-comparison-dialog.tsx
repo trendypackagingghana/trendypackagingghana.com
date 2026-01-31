@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import type { ProductionRun } from "../../_lib/types";
+import type { ProductionRun } from "@/types/production";
 
 interface RunComparisonDialogProps {
   run: ProductionRun;

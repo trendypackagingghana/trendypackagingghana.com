@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ProductionRun } from "../../_lib/types";
+import type { ProductionRun } from "@/types/production";
 import CompleteRunDialog from "./complete-run-dialog";
 import RunComparisonDialog from "./run-comparison-dialog";
 
