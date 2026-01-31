@@ -14,7 +14,7 @@ export default async function ProductionRunsList({
 
   let query = supabase
     .from("production_runs")
-    .select("*")
+    .select("*, finished_goods(pieces_per_bag)")
     .order("planned_start_time", { ascending: false });
 
   if (status && VALID_STATUSES.includes(status)) {

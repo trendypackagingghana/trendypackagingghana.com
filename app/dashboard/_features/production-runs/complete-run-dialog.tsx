@@ -28,7 +28,8 @@ type Step = "form" | "comparison";
 interface FormValues {
   completed_at: string;
   actual_shift: string;
-  actual_pieces: string;
+  actual_bags: string;
+  actual_loose_pieces: string;
   actual_raw_kg: string;
   actual_masterbatch_kg: string;
 }
@@ -83,12 +84,16 @@ export default function CompleteRunDialog({
   const [form, setForm] = useState<FormValues>({
     completed_at: new Date().toISOString().slice(0, 16),
     actual_shift: "",
-    actual_pieces: "",
+    actual_bags: "",
+    actual_loose_pieces: "",
     actual_raw_kg: "",
     actual_masterbatch_kg: "",
   });
 
-  const pieces = Number(form.actual_pieces);
+  const piecesPerBag = run.pieces_per_bag ?? 0;
+  const bags = Number(form.actual_bags) || 0;
+  const loosePieces = Number(form.actual_loose_pieces) || 0;
+  const pieces = bags * piecesPerBag + loosePieces;
   const rawKg = Number(form.actual_raw_kg);
   const mbKg = Number(form.actual_masterbatch_kg);
 
@@ -175,9 +180,9 @@ export default function CompleteRunDialog({
         )}
 
         {step === "form" ? (
-          <FormStep form={form} setForm={setForm} />
+          <FormStep form={form} setForm={setForm} piecesPerBag={piecesPerBag} totalPieces={pieces} />
         ) : (
-          <ComparisonStep run={run} form={form} preview={preview!} />
+          <ComparisonStep run={run} form={form} preview={preview!} totalPieces={pieces} />
         )}
 
         <DialogFooter>
@@ -212,9 +217,13 @@ export default function CompleteRunDialog({
 function FormStep({
   form,
   setForm,
+  piecesPerBag,
+  totalPieces,
 }: {
   form: FormValues;
   setForm: React.Dispatch<React.SetStateAction<FormValues>>;
+  piecesPerBag: number;
+  totalPieces: number;
 }) {
   function update(field: keyof FormValues, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -249,17 +258,44 @@ function FormStep({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="actual_pieces">Pieces Produced</Label>
+        <Label htmlFor="actual_bags">
+          Bags Produced
+          {piecesPerBag > 0 && (
+            <span className="text-muted-foreground font-normal">
+              {" "}({piecesPerBag} pcs/bag)
+            </span>
+          )}
+        </Label>
         <Input
-          id="actual_pieces"
+          id="actual_bags"
           type="number"
-          min="1"
+          min="0"
           step="1"
-          placeholder="e.g. 5000"
-          value={form.actual_pieces}
-          onChange={(e) => update("actual_pieces", e.target.value)}
+          placeholder="e.g. 10"
+          value={form.actual_bags}
+          onChange={(e) => update("actual_bags", e.target.value)}
         />
       </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="actual_loose_pieces">Loose Pieces</Label>
+        <Input
+          id="actual_loose_pieces"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="e.g. 250"
+          value={form.actual_loose_pieces}
+          onChange={(e) => update("actual_loose_pieces", e.target.value)}
+        />
+      </div>
+
+      {totalPieces > 0 && (
+        <div className="rounded-md bg-muted/60 p-3 text-sm">
+          <span className="text-muted-foreground">Total pieces: </span>
+          <span className="font-semibold">{totalPieces.toLocaleString()}</span>
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="actual_raw_kg">Raw Material Used (kg)</Label>
@@ -298,12 +334,13 @@ function ComparisonStep({
   run,
   form,
   preview,
+  totalPieces,
 }: {
   run: ProductionRunSummary;
   form: FormValues;
   preview: { labour: number; material: number };
+  totalPieces: number;
 }) {
-  const pieces = Number(form.actual_pieces);
   const rawKg = Number(form.actual_raw_kg);
   const mbKg = Number(form.actual_masterbatch_kg);
 
@@ -311,7 +348,7 @@ function ComparisonStep({
     {
       label: "Pieces",
       expected: run.target_quantity,
-      actual: pieces,
+      actual: totalPieces,
       format: (v: number) => v.toLocaleString(),
     },
     {

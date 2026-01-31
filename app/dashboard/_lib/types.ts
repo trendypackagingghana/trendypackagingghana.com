@@ -24,6 +24,7 @@ export interface ProductionRun {
   completed_at: string | null;
   created_by: string;
   created_at: string;
+  finished_goods: { pieces_per_bag: number | null } | null;
 }
 
 /** Subset of ProductionRun needed by the completion dialog. */
@@ -32,6 +33,7 @@ export interface ProductionRunSummary {
   finished_good_sku: string;
   target_quantity: number;
   pieces_per_hour: number;
+  pieces_per_bag: number | null;
   expected_raw_kg: number;
   expected_masterbatch_kg: number;
   expected_labour_cost: number;
