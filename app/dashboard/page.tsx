@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import SignOutButton from "./SignOutButton";
 import FAB from "./FAB";
 import ProductionRunsList from "./ProductionRunsList";
+import StatusFilter from "./StatusFilter";
 import Skeleton from "../components/skeletons/Skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -28,18 +29,27 @@ function CardsSkeleton() {
   );
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="flex justify-end p-4">
         <SignOutButton />
       </header>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-foreground mb-8">
-          Production Runs
-        </h1>
-        <Suspense fallback={<CardsSkeleton />}>
-          <ProductionRunsList />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-3xl font-bold text-foreground">
+            Production Runs
+          </h1>
+          <StatusFilter />
+        </div>
+        <Suspense key={status ?? "all"} fallback={<CardsSkeleton />}>
+          <ProductionRunsList status={status} />
         </Suspense>
       </main>
       <FAB />

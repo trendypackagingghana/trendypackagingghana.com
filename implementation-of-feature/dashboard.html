@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Factory Management Dashboard - Trendy Packaging</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-size: 24px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cfdbe7;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-[#0d141b] dark:text-slate-200 transition-colors duration-200">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 flex flex-col bg-white dark:bg-[#16222e] border-r border-slate-200 dark:border-slate-800">
+            <div class="p-6 flex flex-col h-full justify-between">
+                <div class="flex flex-col gap-8">
+                    <!-- Branding -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex flex-col">
+                            <h1 class="text-sm font-bold leading-tight">Trendy Packaging</h1>
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Ghana Limited
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Nav Links -->
+                    <nav class="flex flex-col gap-2">
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary border-r-4 border-primary"
+                            href="#">
+                            <span class="material-symbols-outlined">dashboard</span>
+                            <span class="text-sm font-semibold">Dashboard</span>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                            href="#">
+                            <span class="material-symbols-outlined">inventory_2</span>
+                            <span class="text-sm font-medium">Inventory</span>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                            href="#">
+                            <span class="material-symbols-outlined">precision_manufacturing</span>
+                            <span class="text-sm font-medium">Production</span>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                            href="#">
+                            <span class="material-symbols-outlined">badge</span>
+                            <span class="text-sm font-medium">Staff</span>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+                            href="#">
+                            <span class="material-symbols-outlined">bar_chart_4_bars</span>
+                            <span class="text-sm font-medium">Analytics</span>
+                        </a>
+                    </nav>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-3 p-2 border-t border-slate-100 dark:border-slate-800 pt-4">
+                        <div class="size-10 rounded-full bg-slate-200" data-alt="Avatar of Admin User"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAhe9ub2TdRJD4fqdnT3ND44E7yG5-SfAjh58dAvLZzLIthcxTwqS5doFN5DvpgKv8pKNloCgsOJco1XsGwj1rVf71CgOOWFQ-K-Yz9iSINI9XPBfy19svI2BrsURmlifHZoIIVRCQrIlXl5bTWSF4xlbfvsXSegu2V9Tn3q4gj1atgET2CT4zDKO9kDVQcspHn2b3TKmqye8Ft7KkTrlKj-Dbz18mvP0-ygNBKYkJGsVa-8iYouq8oBcZIzgD6p6vtFBLx_CRabR5');">
+                        </div>
+                        <div class="flex flex-col overflow-hidden">
+                            <p class="text-xs font-bold truncate">Kwame Mensah</p>
+                            <p class="text-[10px] text-slate-500">Plant Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation Bar -->
+            <header
+                class="h-16 bg-white dark:bg-[#16222e] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
+                <div class="flex items-center gap-6 flex-1">
+                    <h2 class="text-lg font-bold">Factory Overview</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 relative">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span
+                            class="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#16222e]"></span>
+                    </button>
+                    <button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+            </header>
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-8 bg-background-light dark:bg-background-dark custom-scrollbar">
+                <!-- Recent Alerts Bar -->
+                <div
+                    class="mb-8 flex items-center gap-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 p-4 rounded-xl">
+                    <span class="material-symbols-outlined text-amber-500">warning</span>
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-amber-800 dark:text-amber-200">System Alert: Raw PET Pellet
+                            supply is at 15%.</p>
+                    </div>
+                    <button class="px-4 py-2 bg-amber-500 text-white rounded-lg text-xs font-bold">Order Now</button>
+                </div>
+
+                <!-- Live Production Status Section -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-4 px-2">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg font-bold">Production Run</h3>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Machine Card 1 -->
+                        <div
+                            class="bg-white dark:bg-[#16222e] p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-sm font-bold mb-1">Line A - 500ml PET</p>
+                                    <p class="text-xs text-slate-500">Batch #402 • 12:45 PM Start</p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded uppercase">Running</span>
+                            </div>
+                            <div class="flex flex-col gap-2 mb-4">
+                                <div class="flex justify-between text-xs font-medium">
+                                    <span>Progress</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-500">Est. Finish: <span
+                                        class="text-slate-900 dark:text-white font-semibold">2:15 PM</span></span>
+                                <span class="material-symbols-outlined text-primary">visibility</span>
+                            </div>
+                        </div>
+                        <!-- Machine Card 2 -->
+                        <div
+                            class="bg-white dark:bg-[#16222e] p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-sm font-bold mb-1">Line B - 200g Jar</p>
+                                    <p class="text-xs text-slate-500">Batch #109 • 11:30 AM Start</p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded uppercase">Running</span>
+                            </div>
+                            <div class="flex flex-col gap-2 mb-4">
+                                <div class="flex justify-between text-xs font-medium">
+                                    <span>Progress</span>
+                                    <span>42%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-500">Est. Finish: <span
+                                        class="text-slate-900 dark:text-white font-semibold">4:50 PM</span></span>
+                                <span class="material-symbols-outlined text-primary">visibility</span>
+                            </div>
+                        </div>
+                        <!-- Machine Card 3 -->
+                        <div
+                            class="bg-white dark:bg-[#16222e] p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-sm font-bold mb-1">Line C - 1L HDPE</p>
+                                    <p class="text-xs text-slate-500">Manual Check-up Required</p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded uppercase">Maintenance</span>
+                            </div>
+                            <div class="flex flex-col gap-2 mb-4 opacity-50">
+                                <div class="flex justify-between text-xs font-medium">
+                                    <span>Progress</span>
+                                    <span>0%</span>
+                                </div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-500">Ready at: <span
+                                        class="text-slate-900 dark:text-white font-semibold">3:00 PM</span></span>
+                                <span class="material-symbols-outlined text-slate-400">settings_suggest</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Data Insights Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- High Performance Stock Chart -->
+                    <div
+                        class="lg:col-span-2 bg-white dark:bg-[#16222e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold">High-Performance Stock</h3>
+                                <p class="text-xs text-slate-500">Inventory levels for top-selling SKUs</p>
+                            </div>
+                            <button class="text-primary text-xs font-bold flex items-center gap-1">View All <span
+                                    class="material-symbols-outlined text-sm">chevron_right</span></button>
+                        </div>
+                        <div class="flex-1 flex items-end gap-6 pt-4 min-h-[250px]">
+                            <!-- Mock Chart Bars -->
+                            <div class="flex-1 flex flex-col items-center gap-2 group">
+                                <div class="w-full bg-primary/20 hover:bg-primary/30 rounded-t-lg transition-all relative flex items-end justify-center"
+                                    style="height: 85%;">
+                                    <div class="w-2/3 bg-primary rounded-t-lg" style="height: 100%;"></div>
+                                    <span
+                                        class="absolute -top-6 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">12.5k</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500 text-center font-medium">500ml PET</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 group">
+                                <div class="w-full bg-primary/20 hover:bg-primary/30 rounded-t-lg transition-all relative flex items-end justify-center"
+                                    style="height: 60%;">
+                                    <div class="w-2/3 bg-primary rounded-t-lg" style="height: 100%;"></div>
+                                    <span
+                                        class="absolute -top-6 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">8.2k</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500 text-center font-medium">200g Jar</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 group">
+                                <div class="w-full bg-red-100 hover:bg-red-200 rounded-t-lg transition-all relative flex items-end justify-center"
+                                    style="height: 15%;">
+                                    <div class="w-2/3 bg-red-500 rounded-t-lg" style="height: 100%;"></div>
+                                    <span
+                                        class="absolute -top-6 text-[10px] font-bold text-red-500 opacity-100">LOW</span>
+                                </div>
+                                <span class="text-[10px] text-red-500 text-center font-bold">1L Bottle</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 group">
+                                <div class="w-full bg-primary/20 hover:bg-primary/30 rounded-t-lg transition-all relative flex items-end justify-center"
+                                    style="height: 70%;">
+                                    <div class="w-2/3 bg-primary rounded-t-lg" style="height: 100%;"></div>
+                                    <span
+                                        class="absolute -top-6 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">10.1k</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500 text-center font-medium">Cap 28mm</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 group">
+                                <div class="w-full bg-primary/20 hover:bg-primary/30 rounded-t-lg transition-all relative flex items-end justify-center"
+                                    style="height: 45%;">
+                                    <div class="w-2/3 bg-primary rounded-t-lg" style="height: 100%;"></div>
+                                    <span
+                                        class="absolute -top-6 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">6.4k</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500 text-center font-medium">Spray Head</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Staff Overview Widget -->
+                    <div
+                        class="bg-white dark:bg-[#16222e] p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+                        <h3 class="text-lg font-bold mb-1">Staff Overview</h3>
+                        <p class="text-xs text-slate-500 mb-6">Current Morning Shift</p>
+                        <div
+                            class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark rounded-xl mb-6">
+                            <div class="flex flex-col">
+                                <span class="text-2xl font-bold">42/45</span>
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Attendance</span>
+                            </div>
+                            <div class="size-14 relative flex items-center justify-center">
+                                <svg class="size-14 -rotate-90">
+                                    <circle class="text-slate-200 dark:text-slate-800" cx="28" cy="28"
+                                        fill="transparent" r="24" stroke="currentColor" stroke-width="6"></circle>
+                                    <circle class="text-primary" cx="28" cy="28" fill="transparent" r="24"
+                                        stroke="currentColor" stroke-dasharray="150" stroke-dashoffset="10"
+                                        stroke-width="6"></circle>
+                                </svg>
+                                <span class="absolute text-[10px] font-bold">93%</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Shift Leads
+                                On-Duty</h4>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-slate-300" data-alt="Staff Lead Photo"
+                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGVZyJ0oxF2g0VAwp0RJWMvJoWZvYyd5u1tIG87tFm3wNcbSEvbKKfJKOAQ0wynMnjvTajijjaGUdX2LO1SPYrguwDERqIAx1ibHJPJs1DAAc4QVCrm66uoTMeI55AzNBzMaN7oiT405HlA9tJ4GXlHxRq081hDdVmJTdr-5JOHiiD_yRF7yz7qzuAdcHHsJS1lkgV_0VkL6O-qy58lORrLhF3oJVVTpXSQUQfKDzMLExTKSxyMMth3rnqv7UNyg4tcc3xdAAW9hda');">
+                                </div>
+                                <div class="flex-1 flex flex-col">
+                                    <span class="text-xs font-bold">Sarah Adjei</span>
+                                    <span class="text-[10px] text-emerald-500 font-medium">Area A Lead</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-slate-300" data-alt="Staff Lead Photo"
+                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD8OfIHY3YTiQy2fF8rfAjBiav41SuhpMAWFPathf0iSJKa78tjhH4q9iVQq39Pgcl2R55vHNohAnALu_-ucov2WIqLLJVLlow3MvNgBATpLR6ec1d117XiwJUnFXJgLKUIZd86l-fldmGumzV0-eJwDauK5dtABVcLup6zfGKwkDdj2diNX7eqU1aOagO6BsKjxV0p582--m3Un5FKvRTXVqpvkOiyP3mLer0LTtKCbfqTNeJ2-V40xgkExnISZXqYGLKtQ3NtBi0g');">
+                                </div>
+                                <div class="flex-1 flex flex-col">
+                                    <span class="text-xs font-bold">Kofi Boateng</span>
+                                    <span class="text-[10px] text-emerald-500 font-medium">Inventory Supervisor</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded-full bg-slate-300" data-alt="Staff Lead Photo"
+                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIlbMjLdvFfXUoQmNzhvwYQVJOnEnin7YQQYlht5quoJQVKYWWI8cmvHtSezIMUkRuPVOKDQTE6hmC1GRd2bimJ_Ga4OgjTu-96VHnvK4NIQE-MqLFsN8iuEvXqFZN2xFMq_fwB4SbekM_K5TACSeoshDHCEf0gQNRhudkJWraVi4kW5LJvzfXlb3l2VpHqzI6xU5jFuXdPx53jsSsTYB3XZjWB9eEWQ8zyLnjeym3oXfVeeJy-93rdZ03QHYuOuYEUHlyqOohWF7a');">
+                                </div>
+                                <div class="flex-1 flex flex-col">
+                                    <span class="text-xs font-bold">Abena Osei</span>
+                                    <span class="text-[10px] text-emerald-500 font-medium">Quality Control</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="mt-auto pt-6 w-full text-center text-xs font-bold text-slate-500 hover:text-primary transition-colors">View
+                            All Staffing</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
