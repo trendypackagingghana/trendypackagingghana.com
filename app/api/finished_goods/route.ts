@@ -6,7 +6,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("finished_goods")
-    .select("sku, category, company, size, color, pieces_per_hour, weight, masterbatch_percentage, machine_type")
+    .select("sku, category, company, size, color, pieces_per_hour, pieces_per_bag, weight, masterbatch_percentage, machine_type")
     .order("category")
     .order("sku");
 

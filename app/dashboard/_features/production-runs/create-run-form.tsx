@@ -24,6 +24,7 @@ interface FinishedGood {
   size: string | null;
   color: string;
   pieces_per_hour: number;
+  pieces_per_bag: number | null;
   weight: string;
   masterbatch_percentage: string;
   machine_type: string;
@@ -42,7 +43,8 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
   const [machineId, setMachineId] = useState<number | "">("");
   const [company, setCompany] = useState("");
   const [sku, setSku] = useState("");
-  const [targetQty, setTargetQty] = useState<number | "">("");
+  const [targetBags, setTargetBags] = useState<number | "">("");
+  const [targetLoosePieces, setTargetLoosePieces] = useState<number | "">("");
   const [startTime, setStartTime] = useState(() => {
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -63,6 +65,9 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
     ? goodsForMachine.filter((g) => g.company === company)
     : [];
   const selectedGood = goods.find((g) => g.sku === sku);
+  const piecesPerBag = selectedGood?.pieces_per_bag ?? 0;
+  const targetQty =
+    (Number(targetBags) || 0) * piecesPerBag + (Number(targetLoosePieces) || 0);
 
   useEffect(() => {
     Promise.all([
@@ -90,7 +95,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const expected = calculateExpectedValues(Number(targetQty), selectedGood);
+    const expected = calculateExpectedValues(targetQty, selectedGood);
     setPreview(expected);
     setError(null);
     setStep("preview");
@@ -108,7 +113,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({
           machine_id: Number(machineId),
           finished_good_sku: sku,
-          target_quantity: Number(targetQty),
+          target_quantity: targetQty,
           planned_start_time: isoStart,
           shift,
         }),
@@ -211,23 +216,56 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="target-qty">Target Quantity (pieces)</Label>
+          <Label htmlFor="target-bags">
+            Target Bags
+            {piecesPerBag > 0 && (
+              <span className="text-muted-foreground font-normal">
+                {" "}({piecesPerBag} pcs/bag)
+              </span>
+            )}
+          </Label>
           <Input
-            id="target-qty"
+            id="target-bags"
             type="text"
             inputMode="numeric"
-            value={targetQty === "" ? "" : Number(targetQty).toLocaleString()}
+            value={targetBags === "" ? "" : Number(targetBags).toLocaleString()}
             onChange={(e) => {
               const raw = e.target.value.replace(/,/g, "");
               if (raw === "") {
-                setTargetQty("");
+                setTargetBags("");
               } else if (/^\d+$/.test(raw)) {
-                setTargetQty(Number(raw));
+                setTargetBags(Number(raw));
               }
             }}
-            placeholder="e.g. 1,000"
+            placeholder="e.g. 10"
           />
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="target-loose-pieces">Loose Pieces</Label>
+          <Input
+            id="target-loose-pieces"
+            type="text"
+            inputMode="numeric"
+            value={targetLoosePieces === "" ? "" : Number(targetLoosePieces).toLocaleString()}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/,/g, "");
+              if (raw === "") {
+                setTargetLoosePieces("");
+              } else if (/^\d+$/.test(raw)) {
+                setTargetLoosePieces(Number(raw));
+              }
+            }}
+            placeholder="e.g. 250"
+          />
+        </div>
+
+        {targetQty > 0 && (
+          <div className="rounded-md bg-muted/60 p-3 text-sm">
+            <span className="text-muted-foreground">Total target pieces: </span>
+            <span className="font-semibold">{targetQty.toLocaleString()}</span>
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="start-time">Planned Start Time</Label>
@@ -298,7 +336,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
         <div className="flex justify-between">
           <span className="text-muted-foreground">Target Quantity</span>
           <span className="font-medium">
-            {Number(targetQty).toLocaleString()} pcs
+            {targetQty.toLocaleString()} pcs
           </span>
         </div>
         <div className="flex justify-between">

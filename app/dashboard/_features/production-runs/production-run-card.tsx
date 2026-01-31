@@ -163,6 +163,7 @@ export default function ProductionRunCard({ run }: { run: ProductionRun }) {
             target_quantity: run.target_quantity,
             pieces_per_hour: run.pieces_per_hour,
             pieces_per_bag: run.finished_goods?.pieces_per_bag ?? null,
+            weight_per_bag_kg: run.finished_goods?.production_materials?.weight_per_bag_kg ?? null,
             expected_raw_kg: run.expected_raw_kg,
             expected_masterbatch_kg: run.expected_masterbatch_kg,
             expected_labour_cost: run.expected_labour_cost,

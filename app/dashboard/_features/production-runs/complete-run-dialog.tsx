@@ -30,7 +30,7 @@ interface FormValues {
   actual_shift: string;
   actual_bags: string;
   actual_loose_pieces: string;
-  actual_raw_kg: string;
+  actual_raw_bags: string;
 }
 
 function computePreviewCosts(
@@ -85,21 +85,23 @@ export default function CompleteRunDialog({
     actual_shift: "",
     actual_bags: "",
     actual_loose_pieces: "",
-    actual_raw_kg: "",
+    actual_raw_bags: "",
   });
 
   const piecesPerBag = run.pieces_per_bag ?? 0;
+  const weightPerBagKg = run.weight_per_bag_kg ?? 0;
   const bags = Number(form.actual_bags) || 0;
   const loosePieces = Number(form.actual_loose_pieces) || 0;
   const pieces = bags * piecesPerBag + loosePieces;
-  const rawKg = Number(form.actual_raw_kg);
+  const rawBags = Number(form.actual_raw_bags) || 0;
+  const rawKg = Math.round(rawBags * weightPerBagKg * 100) / 100;
   const mbKg = Math.round(rawKg * 0.02 * 100) / 100;
 
   const formValid =
     form.completed_at &&
     form.actual_shift &&
     pieces > 0 &&
-    rawKg > 0;
+    rawBags > 0;
 
   const preview = formValid
     ? computePreviewCosts(pieces, run.pieces_per_hour, rawKg, mbKg)
@@ -177,9 +179,9 @@ export default function CompleteRunDialog({
         )}
 
         {step === "form" ? (
-          <FormStep form={form} setForm={setForm} piecesPerBag={piecesPerBag} totalPieces={pieces} masterbatchKg={mbKg} />
+          <FormStep form={form} setForm={setForm} piecesPerBag={piecesPerBag} totalPieces={pieces} weightPerBagKg={weightPerBagKg} rawKg={rawKg} masterbatchKg={mbKg} />
         ) : (
-          <ComparisonStep run={run} form={form} preview={preview!} totalPieces={pieces} masterbatchKg={mbKg} />
+          <ComparisonStep run={run} preview={preview!} totalPieces={pieces} rawKg={rawKg} masterbatchKg={mbKg} />
         )}
 
         <DialogFooter>
@@ -216,12 +218,16 @@ function FormStep({
   setForm,
   piecesPerBag,
   totalPieces,
+  weightPerBagKg,
+  rawKg,
   masterbatchKg,
 }: {
   form: FormValues;
   setForm: React.Dispatch<React.SetStateAction<FormValues>>;
   piecesPerBag: number;
   totalPieces: number;
+  weightPerBagKg: number;
+  rawKg: number;
   masterbatchKg: number;
 }) {
   function update(field: keyof FormValues, value: string) {
@@ -297,22 +303,37 @@ function FormStep({
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="actual_raw_kg">Raw Material Used (kg)</Label>
+        <Label htmlFor="actual_raw_bags">
+          Raw Material Bags Used
+          {weightPerBagKg > 0 && (
+            <span className="text-muted-foreground font-normal">
+              {" "}({weightPerBagKg} kg/bag)
+            </span>
+          )}
+        </Label>
         <Input
-          id="actual_raw_kg"
+          id="actual_raw_bags"
           type="number"
-          min="0.01"
-          step="0.01"
-          placeholder="e.g. 120.5"
-          value={form.actual_raw_kg}
-          onChange={(e) => update("actual_raw_kg", e.target.value)}
+          min="0"
+          step="1"
+          placeholder="e.g. 5"
+          value={form.actual_raw_bags}
+          onChange={(e) => update("actual_raw_bags", e.target.value)}
         />
       </div>
 
-      <div className="rounded-md bg-muted/60 p-3 text-sm">
-        <span className="text-muted-foreground">Masterbatch (2% of raw): </span>
-        <span className="font-semibold">{masterbatchKg > 0 ? `${masterbatchKg} kg` : "—"}</span>
-      </div>
+      {rawKg > 0 && (
+        <div className="rounded-md bg-muted/60 p-3 text-sm space-y-1">
+          <div>
+            <span className="text-muted-foreground">Raw material: </span>
+            <span className="font-semibold">{rawKg} kg</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Masterbatch (2%): </span>
+            <span className="font-semibold">{masterbatchKg} kg</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -323,18 +344,17 @@ function FormStep({
 
 function ComparisonStep({
   run,
-  form,
   preview,
   totalPieces,
+  rawKg,
   masterbatchKg,
 }: {
   run: ProductionRunSummary;
-  form: FormValues;
   preview: { labour: number; material: number };
   totalPieces: number;
+  rawKg: number;
   masterbatchKg: number;
 }) {
-  const rawKg = Number(form.actual_raw_kg);
   const mbKg = masterbatchKg;
 
   const rows = [
