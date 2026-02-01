@@ -43,6 +43,73 @@ export async function getProductionRuns(status?: string): Promise<{
   return { data: runs as unknown as ProductionRun[], error: null };
 }
 
+export interface MonthlyRunData {
+  day: number;
+  currentMonth: number;
+  lastMonth: number;
+}
+
+export async function getMonthlyComparison(): Promise<MonthlyRunData[]> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-indexed
+
+  const currentStart = new Date(currentYear, currentMonth, 1).toISOString();
+  const currentEnd = new Date(currentYear, currentMonth + 1, 1).toISOString();
+  const lastStart = new Date(currentYear, currentMonth - 1, 1).toISOString();
+  const lastEnd = currentStart;
+
+  const [{ data: currentRuns }, { data: lastRuns }] = await Promise.all([
+    supabase
+      .from("production_runs")
+      .select("planned_start_time")
+      .gte("planned_start_time", currentStart)
+      .lt("planned_start_time", currentEnd),
+    supabase
+      .from("production_runs")
+      .select("planned_start_time")
+      .gte("planned_start_time", lastStart)
+      .lt("planned_start_time", lastEnd),
+  ]);
+
+  // Days in each month
+  const daysInCurrent = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const daysInLast = new Date(currentYear, currentMonth, 0).getDate();
+  const maxDays = Math.max(daysInCurrent, daysInLast);
+
+  // Build per-day counts
+  const currentCounts = new Map<number, number>();
+  const lastCounts = new Map<number, number>();
+
+  for (const run of currentRuns ?? []) {
+    const day = new Date(run.planned_start_time).getDate();
+    currentCounts.set(day, (currentCounts.get(day) ?? 0) + 1);
+  }
+  for (const run of lastRuns ?? []) {
+    const day = new Date(run.planned_start_time).getDate();
+    lastCounts.set(day, (lastCounts.get(day) ?? 0) + 1);
+  }
+
+  // Accumulate
+  const result: MonthlyRunData[] = [];
+  let cumCurrent = 0;
+  let cumLast = 0;
+
+  for (let d = 1; d <= maxDays; d++) {
+    cumCurrent += currentCounts.get(d) ?? 0;
+    cumLast += lastCounts.get(d) ?? 0;
+    result.push({
+      day: d,
+      currentMonth: cumCurrent,
+      lastMonth: d <= daysInLast ? cumLast : cumLast,
+    });
+  }
+
+  return result;
+}
+
 const LOW_STOCK_THRESHOLD = 11;
 
 export async function getLowStockAlerts(): Promise<string[]> {
