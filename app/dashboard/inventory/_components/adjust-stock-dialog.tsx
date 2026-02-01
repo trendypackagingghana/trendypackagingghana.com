@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { manualStockAdjustment } from "@/lib/actions/stock";
+import SuccessDialog from "@/components/ui/success-dialog";
 import type { FinishedGood } from "@/types/production";
 
 interface RawMaterial {
@@ -45,6 +46,7 @@ export default function AdjustStockDialog({
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const unit = itemType === "finished_good" ? "pieces" : "bags";
 
@@ -92,6 +94,7 @@ export default function AdjustStockDialog({
       setNote("");
       setError(null);
       setSubmitting(false);
+      setShowSuccess(false);
     }
     onOpenChange(nextOpen);
   }
@@ -126,7 +129,7 @@ export default function AdjustStockDialog({
         return;
       }
 
-      handleOpenChange(false);
+      setShowSuccess(true);
     } catch {
       setError("An unexpected error occurred");
     } finally {
@@ -136,6 +139,16 @@ export default function AdjustStockDialog({
 
   const selectClass =
     "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] outline-none disabled:cursor-not-allowed disabled:opacity-50";
+
+  if (showSuccess) {
+    return (
+      <SuccessDialog
+        open={open}
+        onClose={() => handleOpenChange(false)}
+        message="Stock adjusted successfully."
+      />
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

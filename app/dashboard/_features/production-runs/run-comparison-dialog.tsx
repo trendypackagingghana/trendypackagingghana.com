@@ -51,18 +51,6 @@ export default function RunComparisonDialog({
       actual: run.actual_masterbatch_kg ?? 0,
       format: (v: number) => v.toFixed(2),
     },
-    {
-      label: "Labour Cost (₵)",
-      expected: run.expected_labour_cost,
-      actual: run.actual_labour_cost ?? 0,
-      format: (v: number) => v.toFixed(2),
-    },
-    {
-      label: "Material Cost (₵)",
-      expected: run.expected_material_cost,
-      actual: run.actual_material_cost ?? 0,
-      format: (v: number) => v.toFixed(2),
-    },
   ];
 
   return (

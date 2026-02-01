@@ -24,10 +24,6 @@ export default function ProductionRunRow({ run }: { run: ProductionRun }) {
 
   const actualPieces = run.actual_pieces ?? 0;
   const displayShift = isCompleted && run.actual_shift ? run.actual_shift : run.shift;
-  const displayCost = isCompleted
-    ? (run.actual_labour_cost ?? 0) + (run.actual_material_cost ?? 0)
-    : run.expected_labour_cost + run.expected_material_cost;
-
   return (
     <>
       <tr
@@ -48,9 +44,6 @@ export default function ProductionRunRow({ run }: { run: ProductionRun }) {
         </td>
         <td className="px-4 sm:px-6 py-4 text-sm font-medium text-right hidden sm:table-cell">
           {isCompleted ? actualPieces.toLocaleString() : "—"}
-        </td>
-        <td className="px-4 sm:px-6 py-4 text-sm font-medium text-right hidden md:table-cell">
-          ₵{displayCost.toFixed(2)}
         </td>
         <td className="px-4 sm:px-6 py-4">
           <span

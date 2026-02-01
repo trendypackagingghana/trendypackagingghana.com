@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { PRODUCTION_CONSTANTS } from "@/lib/constants/production";
 import { completeProductionRun } from "@/lib/actions/production-runs";
+import SuccessDialog from "@/components/ui/success-dialog";
 import type { ProductionRunSummary } from "@/types/production";
 
 type Step = "form" | "comparison";
@@ -78,6 +79,7 @@ export default function CompleteRunDialog({
   const [step, setStep] = useState<Step>("form");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [form, setForm] = useState<FormValues>({
     completed_at: new Date().toISOString().slice(0, 16),
@@ -122,6 +124,7 @@ export default function CompleteRunDialog({
       setStep("form");
       setError(null);
       setSubmitting(false);
+      setShowSuccess(false);
     }
     onOpenChange(nextOpen);
   }
@@ -143,12 +146,22 @@ export default function CompleteRunDialog({
         throw new Error(result.error);
       }
 
-      handleOpenChange(false);
+      setShowSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (showSuccess) {
+    return (
+      <SuccessDialog
+        open={open}
+        onClose={() => handleOpenChange(false)}
+        message="Production run completed successfully."
+      />
+    );
   }
 
   return (

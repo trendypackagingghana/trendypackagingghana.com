@@ -37,9 +37,6 @@ export default function ProductionRunCard({ run }: { run: ProductionRun }) {
   const displayMbKg = isCompleted
     ? (run.actual_masterbatch_kg ?? run.expected_masterbatch_kg)
     : run.expected_masterbatch_kg;
-  const displayCost = isCompleted
-    ? ((run.actual_labour_cost ?? 0) + (run.actual_material_cost ?? 0))
-    : (run.expected_labour_cost + run.expected_material_cost);
   const displayShift = isCompleted && run.actual_shift
     ? run.actual_shift
     : run.shift;
@@ -110,10 +107,6 @@ export default function ProductionRunCard({ run }: { run: ProductionRun }) {
           <div>
             <span className="text-muted-foreground">MB </span>
             <span className="font-semibold">{displayMbKg} kg</span>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Cost </span>
-            <span className="font-semibold">₵{displayCost.toFixed(2)}</span>
           </div>
         </div>
 

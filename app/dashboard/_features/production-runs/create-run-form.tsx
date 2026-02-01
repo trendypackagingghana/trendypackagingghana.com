@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import SuccessDialog from "@/components/ui/success-dialog";
 import type { Machine, FinishedGood } from "@/types/production";
 
 type Step = "form" | "preview";
@@ -36,6 +37,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
   const [preview, setPreview] = useState<ProductionRunExpected | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const selectedMachine = machines.find((m) => m.id === machineId && !m.is_active);
   const goodsForMachine = selectedMachine
@@ -101,7 +103,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
         return;
       }
 
-      onClose();
+      setShowSuccess(true);
     } catch {
       setError("An unexpected error occurred");
     } finally {
@@ -119,6 +121,16 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
   if (loadingData) {
     return (
       <div className="text-center py-12 text-muted-foreground">Loading...</div>
+    );
+  }
+
+  if (showSuccess) {
+    return (
+      <SuccessDialog
+        open
+        onClose={onClose}
+        message="Production run created successfully."
+      />
     );
   }
 

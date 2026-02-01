@@ -56,9 +56,6 @@ export default async function ProductionRunsList({
               <th className="px-4 sm:px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground text-right hidden sm:table-cell">
                 Actual
               </th>
-              <th className="px-4 sm:px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground text-right hidden md:table-cell">
-                Cost
-              </th>
               <th className="px-4 sm:px-6 py-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Status
               </th>
