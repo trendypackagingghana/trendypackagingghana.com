@@ -1,7 +1,10 @@
+import type { UserRole } from "@/lib/auth";
+
 export interface NavItem {
   href: string;
   icon: string;
   label: string;
+  roles?: UserRole[];
 }
 
 export interface NavGroup {
@@ -17,6 +20,7 @@ export function isNavGroup(entry: NavEntry): entry is NavGroup {
 
 export const NAV_ITEMS: NavEntry[] = [
   { href: "/dashboard", icon: "dashboard", label: "Dashboard" },
+  { href: "/dashboard/analytics", icon: "bar_chart_4_bars", label: "Analytics", roles: ["admin"] },
   {
     label: "Operations",
     items: [
@@ -28,7 +32,6 @@ export const NAV_ITEMS: NavEntry[] = [
   {
     label: "Commerce",
     items: [
-      { href: "/dashboard/analytics", icon: "bar_chart_4_bars", label: "Analytics" },
       { href: "/dashboard/customers", icon: "groups", label: "Customers" },
       { href: "/dashboard/sales", icon: "point_of_sale", label: "Sales" },
     ],

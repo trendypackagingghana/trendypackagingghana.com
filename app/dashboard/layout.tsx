@@ -1,4 +1,6 @@
 import { getLowStockAlerts } from "./_features/production-runs/_lib/data";
+import { getUserProfile } from "@/lib/auth";
+import type { UserRole } from "@/lib/auth";
 import DashboardShell from "./_components/dashboard-shell";
 
 export default async function DashboardLayout({
@@ -6,7 +8,16 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const alerts = await getLowStockAlerts();
+  const [alerts, profile] = await Promise.all([
+    getLowStockAlerts(),
+    getUserProfile(),
+  ]);
 
-  return <DashboardShell alerts={alerts}>{children}</DashboardShell>;
+  const role: UserRole = profile?.role ?? "shift_leader";
+
+  return (
+    <DashboardShell alerts={alerts} role={role}>
+      {children}
+    </DashboardShell>
+  );
 }

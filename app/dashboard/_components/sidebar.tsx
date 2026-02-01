@@ -2,15 +2,33 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { NAV_ITEMS, isNavGroup, type NavItem } from "../_lib/navigation";
+import { NAV_ITEMS, isNavGroup, type NavItem, type NavEntry } from "../_lib/navigation";
 import { company } from "@/app/config/company";
+import type { UserRole } from "@/lib/auth";
 
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
+  role: UserRole;
 }
 
-export default function Sidebar({ open, onClose }: SidebarProps) {
+function filterNavItems(items: NavEntry[], role: UserRole): NavEntry[] {
+  return items
+    .map((entry) => {
+      if (isNavGroup(entry)) {
+        const filtered = entry.items.filter(
+          (item) => !item.roles || item.roles.includes(role)
+        );
+        if (filtered.length === 0) return null;
+        return { ...entry, items: filtered };
+      }
+      if (entry.roles && !entry.roles.includes(role)) return null;
+      return entry;
+    })
+    .filter((entry): entry is NavEntry => entry !== null);
+}
+
+export default function Sidebar({ open, onClose, role }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -54,7 +72,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
         {/* Nav links */}
         <nav className="flex flex-col gap-1">
-          {NAV_ITEMS.map((entry, i) => {
+          {filterNavItems(NAV_ITEMS, role).map((entry, i) => {
             if (isNavGroup(entry)) {
               return (
                 <div key={entry.label} className={i > 0 ? "mt-4" : ""}>
