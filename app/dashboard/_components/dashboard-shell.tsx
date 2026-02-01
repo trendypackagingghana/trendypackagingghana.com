@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Sidebar from "./sidebar";
+import LowStockBanner from "./low-stock-banner";
 import { company } from "@/app/config/company";
 
 export default function DashboardShell({
   children,
+  alerts,
 }: {
   children: React.ReactNode;
+  alerts: string[];
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -16,6 +19,9 @@ export default function DashboardShell({
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Low stock warning banner */}
+        <LowStockBanner alerts={alerts} />
+
         {/* Mobile top bar */}
         <header className="sticky top-0 z-30 bg-card border-b border-border lg:hidden">
           <div className="flex items-center justify-between h-14 px-4">
