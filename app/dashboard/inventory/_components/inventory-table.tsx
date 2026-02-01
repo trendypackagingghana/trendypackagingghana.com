@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InventoryItem } from "@/types/inventory";
+import AdjustStockDialog from "./adjust-stock-dialog";
 
 interface InventoryTableProps {
   finishedGoods: InventoryItem[];
@@ -15,6 +16,7 @@ export function InventoryTable({
   const [tab, setTab] = useState<"finished" | "raw">("finished");
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [adjustOpen, setAdjustOpen] = useState(false);
   const ITEMS_PER_PAGE = 10;
 
   const items = tab === "finished" ? finishedGoods : rawMaterials;
@@ -84,9 +86,12 @@ export function InventoryTable({
             Filter
           </button>
         </div>
-        <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all">
+        <button
+          onClick={() => setAdjustOpen(true)}
+          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all"
+        >
           <span className="material-symbols-outlined text-lg">add</span>
-          Add New Item
+          Adjust Stock
         </button>
       </div>
 
@@ -128,10 +133,10 @@ export function InventoryTable({
                     key={item.sku}
                     className="hover:bg-muted/50 transition-colors"
                 >
-                    <td className="px-6 py-4 text-sm font-bold">
+                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
                     {item.sku}
                     </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
+                    <td className="px-6 py-4 text-sm font-bold">
                     {item.name}
                     </td>
                     <td className="px-6 py-4 text-sm">
@@ -180,6 +185,12 @@ export function InventoryTable({
           </button>
         </div>
       </div>
+
+      <AdjustStockDialog
+        open={adjustOpen}
+        onOpenChange={setAdjustOpen}
+        itemType={tab === "finished" ? "finished_good" : "raw_material"}
+      />
     </div>
   );
 }

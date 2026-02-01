@@ -111,7 +111,7 @@ export async function completeProductionRun(
 
   const { data: run, error: fetchError } = await supabase
     .from("production_runs")
-    .select("id, status, pieces_per_hour, machine_id")
+    .select("id, status, pieces_per_hour, machine_id, finished_good_sku")
     .eq("id", id)
     .single();
 
@@ -157,8 +157,32 @@ export async function completeProductionRun(
     .update({ is_active: false })
     .eq("id", run.machine_id);
 
+  // Record stock movements for the completed production
+  // Finished goods produced (stock in)
+  await supabase.from("stock_movements").insert({
+    item_type: "finished_good",
+    item_sku: run.finished_good_sku,
+    direction: "in",
+    reason: "production_complete",
+    quantity_pieces: validated.actual_pieces,
+    reference_id: id,
+    created_by: user.id,
+  });
+
+  // Raw material consumed (stock out)
+  await supabase.from("stock_movements").insert({
+    item_type: "raw_material",
+    item_sku: run.finished_good_sku,
+    direction: "out",
+    reason: "production_complete",
+    quantity_kg: validated.actual_raw_kg + validated.actual_masterbatch_kg,
+    reference_id: id,
+    created_by: user.id,
+  });
+
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/production");
+  revalidatePath("/dashboard/inventory");
 
   return { data: updated };
 }

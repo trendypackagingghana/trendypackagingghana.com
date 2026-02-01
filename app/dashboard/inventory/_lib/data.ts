@@ -67,35 +67,34 @@ export async function getRawMaterialsInventory(): Promise<InventoryItem[]> {
 
     // Assuming 'production_materials' exists as per requirements
     const { data, error } = await supabase
-        .from("production_materials") // You might need to verify this table name exists
+        .from("production_materials")
         .select(`
       sku,
       name,
       category,
       raw_material_stock (
-        quantity_kg
+        quantity_bags
       )
     `);
 
     if (error) {
-        // If table doesn't exist yet, return empty to prevent crash
         console.error("Error fetching raw materials:", error);
         return [];
     }
 
     return (data || []).map((item: any) => {
-        const qty = item.raw_material_stock?.quantity_kg || 0;
+        const qty = item.raw_material_stock?.quantity_bags || 0;
 
         let status: InventoryItem["status"] = "In Stock";
         if (qty === 0) status = "Out of Stock";
-        else if (qty < 100) status = "Low Stock"; // Example threshold
+        else if (qty < 11) status = "Low Stock";
 
         return {
             sku: item.sku,
             name: item.name,
             category: item.category || "Raw Material",
             current_stock: qty,
-            unit: "kg",
+            unit: "bags",
             status: status,
             stock_id: item.sku,
         };
