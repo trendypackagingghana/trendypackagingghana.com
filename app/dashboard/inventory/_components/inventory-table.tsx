@@ -79,7 +79,7 @@ export function InventoryTable({
       </div>
 
       {/* Table */}
-      <div className="overflow-auto max-h-[400px]">
+      <div className="overflow-auto max-h-[460px]">
         <table className="w-full text-left border-collapse">
           <thead className="sticky top-0 z-10">
             <tr className="bg-muted/50 border-b border-border">

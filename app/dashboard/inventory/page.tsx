@@ -21,10 +21,10 @@ export default async function InventoryPage() {
 
   return (
     <div className="flex-1 w-full max-w-[1600px] mx-auto p-4 md:p-6 space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
         {/* Inventory Section (Left 8 cols) */}
-        <div className="lg:col-span-8 space-y-4">
+        <div className="lg:col-span-8">
           <Suspense fallback={<div>Loading inventory...</div>}>
             <InventoryTable 
                 finishedGoods={finishedGoods} 

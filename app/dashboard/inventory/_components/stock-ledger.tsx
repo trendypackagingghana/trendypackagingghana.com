@@ -2,7 +2,7 @@ import { StockMovement } from "@/types/inventory";
 
 export function StockLedger({ movements }: { movements: StockMovement[] }) {
   return (
-    <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col h-[700px]">
+    <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden flex flex-col h-full">
       <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
         <h3 className="text-sm font-bold flex items-center gap-2">
           <span className="material-symbols-outlined text-primary">
