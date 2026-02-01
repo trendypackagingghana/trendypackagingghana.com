@@ -44,6 +44,7 @@ export interface Machine {
   id: number;
   name: string;
   machine_type: string;
+  is_active: boolean;
 }
 
 /** Finished good from the finished_goods table. */

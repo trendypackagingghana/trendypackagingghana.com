@@ -27,6 +27,21 @@ export async function createProductionRun(input: {
     return { error: "Unauthorized" };
   }
 
+  // Check if machine is already running an active production
+  const { data: machine, error: machineError } = await supabase
+    .from("machinery")
+    .select("id, is_active")
+    .eq("id", validated.machine_id)
+    .single();
+
+  if (machineError || !machine) {
+    return { error: "Machine not found" };
+  }
+
+  if (machine.is_active) {
+    return { error: "This machine is currently running a production. Wait until the current run is completed." };
+  }
+
   const { data: good, error: goodError } = await supabase
     .from("finished_goods")
     .select("pieces_per_hour, weight, masterbatch_percentage")
@@ -59,6 +74,12 @@ export async function createProductionRun(input: {
     return { error: "Failed to create production run" };
   }
 
+  // Mark machine as active
+  await supabase
+    .from("machinery")
+    .update({ is_active: true })
+    .eq("id", validated.machine_id);
+
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/production");
 
@@ -90,7 +111,7 @@ export async function completeProductionRun(
 
   const { data: run, error: fetchError } = await supabase
     .from("production_runs")
-    .select("id, status, pieces_per_hour")
+    .select("id, status, pieces_per_hour, machine_id")
     .eq("id", id)
     .single();
 
@@ -129,6 +150,12 @@ export async function completeProductionRun(
     console.error("Update production run error:", updateError);
     return { error: "Failed to complete production run" };
   }
+
+  // Release the machine
+  await supabase
+    .from("machinery")
+    .update({ is_active: false })
+    .eq("id", run.machine_id);
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/production");

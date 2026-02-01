@@ -37,7 +37,7 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const selectedMachine = machines.find((m) => m.id === machineId);
+  const selectedMachine = machines.find((m) => m.id === machineId && !m.is_active);
   const goodsForMachine = selectedMachine
     ? goods.filter((g) => g.machine_type === selectedMachine.machine_type)
     : [];
@@ -139,8 +139,8 @@ export default function CreateRunForm({ onClose }: { onClose: () => void }) {
           >
             <option value="">Select a machine</option>
             {machines.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}
+              <option key={m.id} value={m.id} disabled={m.is_active}>
+                {m.name}{m.is_active ? " (Busy)" : ""}
               </option>
             ))}
           </select>

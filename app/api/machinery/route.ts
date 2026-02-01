@@ -6,7 +6,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("machinery")
-    .select("id, name, machine_type")
+    .select("id, name, machine_type, is_active")
     .order("name");
 
   if (error) {
